@@ -1,0 +1,9 @@
+{
+  "name": "2023",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "https://github.com/WinstonSmith13/advent_code.git",
+  "author": "MedyKrk",
+  "license": "MIT",
+  "type": "module"
+}
