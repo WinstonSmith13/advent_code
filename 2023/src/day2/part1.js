@@ -6,30 +6,70 @@ export default class Part1 {
 
     async resolve() {
         const ligns = this.puzzle.split(this.line);
-        const gamesObject = {};
 
+        const lines = ligns.map(line => {
+            const match = line.match(/^Game (\d+): (.+)$/);
 
-        const games = ligns.map(game =>{
-            return game.split(/[,:;]/)
-        })
+          
+                const gameNumber = match[1];
+                const setString = match[2];
 
-        games.forEach(([gameName, ...gameData]) => {
-            const colorsObject = {};
+                // 
+                const sets = setString.split(';').map(set => set.trim());
 
-            gameData.forEach(colors =>{
-                const [number, color] = colors.trim().split(' ')
-                
-                colorsObject[color] = Number(number)
-            })
+                // 
+                const gameSets = {};
+                sets.forEach((set, index) => {
+                    const setItems = set.split(',').map(item => item.trim());
+                    const setDetails = setItems.map(item => {
+                        const [number, color] = item.includes(' ') ? item.split(' ') : [item, ''];
+                        return { number: parseInt(number), color };
+                    });
 
-            
-            gamesObject[gameName] = colorsObject
+                    gameSets[`set${index + 1}`] = setDetails;
+                });
 
-            // console.log(colorsObject)
+                return { gameNumber, ...gameSets };
+           
         });
 
-        
-        console.log('games', gamesObject);
+        // lines.forEach(line => {
+        //     console.log(`Game ${line.gameNumber}:`);
+        //     for (const key in line) {
+        //         if (key.startsWith('set')) {
+        //             console.log(`  ${key}:`);
+        //             line[key].forEach(item => {
+        //                 console.log(`    Number: ${item.number}, Color: ${item.color}`);
+        //             });
+        //         }
+        //     }
+        // });
+
+        function isGamePossible(game, redCubes, greenCubes, blueCubes) {
+            for (const key in game) {
+                if (key.startsWith('set')) {
+                    for (const item of game[key]) {
+                        if (
+                            (item.color === 'red' && item.number > redCubes) ||
+                            (item.color === 'green' && item.number > greenCubes) ||
+                            (item.color === 'blue' && item.number > blueCubes)
+                        ) {
+                            return false;
+                        }
+                    }
+                }
+            }
+            return true;
+        }
+
+        const possibleGames = lines.filter(game =>
+            isGamePossible(game, 12, 13, 14)
+        );
+
+        const totalId = possibleGames.reduce((sum, game) => sum + parseInt(game.gameNumber), 0);
+
+        console.log("Possible games:");
+        console.log(possibleGames);
+        console.log("Total ID of possible games:", totalId);
     }
-    
 }
