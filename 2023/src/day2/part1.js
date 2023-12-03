@@ -63,13 +63,14 @@ export default class Part1 {
         }
 
         const possibleGames = lines.filter(game =>
-            isGamePossible(game, 12, 13, 14)
+           console.log(isGamePossible(game, 12, 13, 14)) 
         );
+        
 
         const totalId = possibleGames.reduce((sum, game) => sum + parseInt(game.gameNumber), 0);
 
-        console.log("Possible games:");
-        console.log(possibleGames);
-        console.log("Total ID of possible games:", totalId);
+        // console.log("Possible games:");
+
+        // console.log("Total ID of possible games:", totalId);
     }
 }
