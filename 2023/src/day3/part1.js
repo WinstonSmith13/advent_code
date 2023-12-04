@@ -7,20 +7,22 @@ export default class Part1 {
     async resolve() {
         const ligns = this.puzzle.split(this.line);
         
-        const lines = ligns.map(line =>
-            line.trim().replace(/\./g, '.'));
-
-        console.log(ligns)
-        console.log(lines)
-
-        for(let i = 0; i < lines.length; i++){
-
-            const line = lines[i]
-            console.log(`Line ${i + 1}: ${line}`);
-            for(let l = 0; l < line.length; l++){
-                console.log(`index ${l}`,line[l])
+        // console.log(ligns)
+        // const lines = ligns.map(line =>
+        //     line.trim().replace(/\./g, '.'));
+        
+    function cartography(array){
+        for(let y = 0; y < array.length; y++ ){
+            const ligne = array[y];
+            // console.log(`-Y ${y}-`)
+            for(let x = 0; x < ligne.length; x++){
+                const ligneX = ligne[x]
+                // console.log(`X ${x}`, ligneX)
             }
         }
-     
+    }
+
+    cartography(ligns)
+
     }
 }
