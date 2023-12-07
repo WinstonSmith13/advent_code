@@ -1,5 +1,5 @@
 import puzzleParse from './puzzle-parse.js';
-import part1 from './day3/part1.js';
+import part2 from './day3/part2.js';
 
 const filePath = './day3/puzzle_file.txt';
 
@@ -9,7 +9,7 @@ async function run(){
     try{
         const data = await readFile.readFile();
 
-        const resolver = new part1(data);
+        const resolver = new part2(data);
 
         await resolver.resolve();
     }

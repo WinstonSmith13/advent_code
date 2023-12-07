@@ -1,89 +1,108 @@
 export default class Part2 {
     constructor(puzzle) {
-        this.puzzle = puzzle;
-        this.line = '\n';
+      this.puzzle = puzzle;
+      this.line = '\n';
     }
-
+  
     async resolve() {
-        const ligns = this.puzzle.split(this.line);
-       
-
-        const lines = ligns.map(line => {
-            const match = line.match(/^Game (\d+): (.+)$/);
-
-          
-                const gameNumber = match[1];
-                const setString = match[2];
-
-                // 
-                const sets = setString.split(';').map(set => set.trim());
-
-                // 
-                const gameSets = {};
-                sets.forEach((set, index) => {
-                    const setItems = set.split(',').map(item => item.trim());
-                    const setDetails = setItems.map(item => {
-                        const [number, color] = item.includes(' ') ? item.split(' ') : [item, ''];
-                        return { number: parseInt(number), color };
-                    });
-
-                    gameSets[`set${index + 1}`] = setDetails;
-                });
-
-                return { gameNumber, ...gameSets };
-           
-        });
-        // console.log(lines)
-
-        //  lines.forEach(line => {
-        //     console.log(`Game ${line.gameNumber}:`);
-        //     for (const key in line) {
-        //         if (key.startsWith('set')) {
-        //             console.log(`  ${key}:`);
-        //             line[key].forEach(item => {
-        //                 console.log(`    Number: ${item.number}, Color: ${item.color}`);
-        //             });
-        //         }
-        //     }
-        // });
-
-        function feverCubes(game) {
-            const objetMax = {};
-    
-            for (const key in game) {
-                if (key.startsWith('set')) {
-                    for (const item of game[key]) {
-                        if (!objetMax[item.color] || objetMax[item.color] < item.number) {
-                            objetMax[item.color] = item.number;
-                        }
-                    }
+      const ligns = this.puzzle.split(this.line);
+      const map = [];
+      let indexY = 0;
+  
+      while (ligns[indexY]) {
+        let indexX = 0;
+        const chars = ligns[indexY].split('');
+        while (chars[indexX]) {
+          if (chars[indexX] === '.') {
+            indexX++;
+            continue;
+          }
+          if (isNaN(chars[indexX])) {
+            map.push({ pos_y: indexY, pos_x: indexX, symbol: chars[indexX] });
+            indexX++;
+            continue;
+          }
+          let numberStr = '';
+          let size = 0;
+  
+          while (chars[indexX + size] && !isNaN(chars[indexX + size])) {
+            numberStr += chars[indexX + size];
+            size++;
+          }
+          map.push({ pos_y: indexY, pos_x: indexX, size, number: parseInt(numberStr) });
+          indexX += size;
+        }
+        indexY++;
+      }
+  
+      const arrayParse = (array) => {
+        const result = [];
+        const symbols = array.filter(({ symbol }) => !!symbol && symbol === '*');
+  
+        let i = 0;
+  
+        while (symbols[i]) {
+          const { pos_y, pos_x } = symbols[i];
+  
+          result.push(
+            ...array.filter((n) => {
+              if (n.number >= 0 && [pos_y, pos_y + 1, pos_y - 1].includes(n.pos_y)) {
+                const numberTotal = Array.from({ length: n.size }, (_, index) => n.pos_x + index);
+  
+                if (numberTotal.includes(pos_x - 1) || numberTotal.includes(pos_x + 1)) {
+                  return true;
                 }
-            }
-    
-            return objetMax;
+              }
+              return false;
+            })
+          );
+  
+          i++;
         }
+  
+        return { result, symbols };
+      };
+  
+      const result = arrayParse(map);
+  
 
-        function puissance(value) {
-            return value.reduce((total, obj) => {
-                let product = 1;
-        
-                for (const key in obj) {
-                    product *= obj[key];
-                }
-        
-                return [...total, product];
-            }, []);
-        }
-        
-        const result = lines.map(game => feverCubes(game));
-        const maxSets = puissance(result);
-        console.log(maxSets);
 
-        const total = maxSets.reduce((acc, current)=>{
-            return acc + current
-        }, 0)
-        
-        console.log(total)
-        }
+const adjacentNumbers = (data) => {
+//   console.log('Nombres adjacents :', data.result);
+//   console.log('Liste des étoiles :', data.symbols);
 
-}
+  const starsWithTwoNumbers = data.symbols.map(star => {
+    const numberAround = data.result.filter(number => {
+      return (
+        Math.abs(number.pos_y - star.pos_y) <= 1 &&
+        Math.abs(number.pos_x - star.pos_x) <= (number.size + 1)
+      );
+    });
+console.log(numberAround)
+
+  
+    return {
+      ...star,
+      numbersAround: numberAround.length === 2 ? numberAround : null
+    };
+  });
+
+  const ratios = []; 
+  starsWithTwoNumbers.forEach(star => {
+    if (star.numbersAround) {
+      const ratio = star.numbersAround.reduce((sum, {number}) =>  sum * number, 1);
+      ratios.push(ratio)
+    //   console.log(ratio)
+    }
+  });
+
+  const sum = ratios.reduce((sum, currentNum) => sum + currentNum, 0)
+  console.log(sum)
+
+};
+
+adjacentNumbers(result);
+
+    }
+  }
+  
