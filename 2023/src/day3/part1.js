@@ -1,4 +1,4 @@
-export default class Part1 {
+// export default class Part1 {
     constructor(puzzle) {
         this.puzzle = puzzle;
         this.line = '\n';
