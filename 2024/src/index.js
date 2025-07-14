@@ -51,7 +51,7 @@ const run = async () => {
     if(typeof solve === 'function'){
       try{
         const result = solve(input);
-        console.log(`Result ${i}: ${result}`);
+        console.log(`Result Part ${i}: ${result}`);
       } catch(err){
         console.error(`error: ${err}`);
       }
