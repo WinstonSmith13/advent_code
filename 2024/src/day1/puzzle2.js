@@ -17,8 +17,6 @@ export function solve(input){
     })
   });
 
-
-  let numberAppears = 0;
   let similarityArray = [];
 
   for (let i = 0; i<columnLeft.length; i++){
