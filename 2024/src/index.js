@@ -29,7 +29,7 @@ try {
 }
 
 async function loadPuzzleSolver(day, puzzleNumber){
-  console.log('[DEBUG]-LoadpuzzleSolver begin');
+  // console.log('[DEBUG]-LoadpuzzleSolver begin');
 
   const puzzlePath = join(__dirname, `day${day}`, `puzzle${puzzleNumber}.js`);
   //console.log(puzzlePath);

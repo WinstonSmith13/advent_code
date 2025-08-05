@@ -1,10 +1,16 @@
 export function solve(input){
-  const lines = input.trim().split('\n');
-  const reports = lines.map(line => line.trim().split(' ').map(Number));
 
-  let safetyReports = [];
+  const matches = input.matchAll(/mul\((\d+),(\d+)\)/g);
+
   
-  
+  for (const m of matches) {
+  //console.log(m[0]);
+  //console.log(m[1]);
+  //console.log(m[2]);
+  //console.log('m', m);
+  console.log(JSON.stringify(m, null, 2));
+}
+
  
-  return 'Solution part1';
+  return 'result';
 }
