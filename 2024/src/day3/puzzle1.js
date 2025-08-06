@@ -4,3 +4,5 @@ export function solve(input){
   .reduce((acc, val) => acc + val, 0);
 }
 
+
+
