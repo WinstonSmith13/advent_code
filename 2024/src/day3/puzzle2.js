@@ -2,16 +2,26 @@ export function solve(input){
 
   const regex = /(?<type>do\(\)|don't\(\)|mul\((\d+),(\d+)\))/g;
   const matches = [...input.matchAll(regex)];
-
-  console.log('matches', matches);
   
-  for (const m of matches) {
-    console.log('m[0]',m[0]);           // le texte trouvé
-    console.log('m.groups.type', m.groups.type);  // "do()", "don't()" ou "mul(...)"
-    console.log('m[2]', m[2], 'm[3]', m[3]);     // si c’est un mul : les deux nombres
+  let isAllowed = true;
+  const results = [];
+
+
+  for (const m of matches){
+    if (m.groups.type === "don't()") {
+      isAllowed = false;
+    } else if (m.groups.type === "do()") {
+      isAllowed = true;
+    }
+     else if (m.groups.type.startsWith('mul(')){
+      if (isAllowed){
+        const num1 = Number(m[2]);
+        const num2 = Number(m[3]);
+        const product = num1 * num2;
+        results.push(product);
+      }
+    }
   }
-
-
-
-  return 'total';
+  const total = results.reduce((acc, val) => acc + val, 0);
+  return total;
 }
