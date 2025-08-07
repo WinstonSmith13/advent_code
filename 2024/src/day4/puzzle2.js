@@ -3,36 +3,55 @@ export function solve(input){
   const letters = lines.map(line => line.trim().split(''));
   //console.log(lines);
   //console.log(letters);
-  const directions = {
-    'bas': [1, 0],
-    'haut': [-1, 0],
-    'gauche': [0, -1],
-    'droite': [0, 1],
-    'haut-gauche': [-1, -1],
-    'haut-droite': [-1, 1],
-    'bas-gauche': [1, -1],
-    'bas-droite': [1, 1]
+
+
+  
+  const directionPairs = {
+  'M_haut-gauche_S_bas-gauche': {
+    M: [-1, -1],
+    S: [1, -1]
+  },
+  'M_haut-droite_S_bas-droite': {
+    M: [-1, 1],
+    S: [1, 1]
+  },
+  'M_haut-gauche_S_haut-gauche': {
+    M: [-1, -1],
+    S: [-2, -2] 
+  },
+  'M_bas-droite_S_haut-droite': {
+    M: [1, 1],
+    S: [-1, 1]
   }
+};
+  
 
-  const LettersToFind = ['X', 'M', 'A', 'S'];
+  const LettersX = ['M', 'S'];
+
   let counter = 0;
-  const entries = Object.entries(directions);
+  const entries = Object.entries(directionPairs);
 
 
-  function checkDirection(letters, row, col, dx, dy, lettersToFind) {
-    for (let i = 0; i < lettersToFind.length; i++) {
-      const newRow = row + i * dx;
-      const newCol = col + i * dy;
 
-      if (
-        newRow < 0 || newRow >= letters.length ||
-        newCol < 0 || newCol >= letters[0].length
+  function checkDirection(letters, row, col, targetRowM, targetColM, targetRowS, targetColS, LettersX) {
+    for (let i = 0; i < LettersX.length; i++) {
+      const newRowM = row + i * targetRowM;
+      const newColM = col + i * targetColM;
+      const newRowS = row + i * targetRowS;
+      const newColS = col + i * targetColS;
+
+
+      if (        newRowM < 0 || newRowM >= letters.length ||
+        newColM < 0 || newColM >= letters[0].length ||
+        newRowS < 0 || newRowS >= letters.length ||
+        newColS < 0 || newColS >= letters[0].length
       ) {
         return false;
       }
 
-      const currentLetter = letters[newRow][newCol];
-      if (currentLetter !== lettersToFind[i]) {
+      const currentLetterM = letters[newRowM][newColM];
+      const currentLetterS = letters[newRowS][newColS];
+      if (currentLetterM !== LettersX[0] || currentLetterS !== LettersX[1]) {
         return false;
       }
     }
@@ -40,21 +59,46 @@ export function solve(input){
     return true;
   }
 
+  // Check A after check directions 
+  // 
+  // 'haut-gauche': [-1, -1], 
+  // 'haut-droite': [-1, 1], 
+  // 'bas-gauche': [1, -1],
+  // 'bas-droite': [1, 1]
+
+
+  // A puis after M ou S en haut-gauche, haut-droite, bas-gauche, bas-droite
+  // si En haut gauche M alors en bas gauche il faut chercher S 
+  // si en haut droite M alors en bas droite il faut chercher S
+  // si en haut gauche M alors en haut gauche il faut chercher S
+  // si en bas droite M alors en haut droite il faut chercher S
+
   
 
   for (let row = 0; row < letters.length; row++) {
     for (let col = 0; col < letters[row].length; col++){
       const letter = letters[row][col];
-      if (letter === LettersToFind[0]) {
-        for (const entry of entries) {
-          const name = entry[0];
-          const dx = entry[1][0];
-          const dy = entry[1][1];
+      if (letter === 'A') {
+        for (const [name, dirs] of entries) {
+          const [dxM, dyM] = dirs.M;
+          const [dxS, dyS] = dirs.S;
+          const targetRowM = row + dxM;
+          const targetColM = col + dyM;
+          const targetRowS = row + dxS;
+          const targetColS = col + dyS;
 
-          if (checkDirection(letters, row, col, dx, dy, LettersToFind)) {
+          
+
+          // console.log(
+          //   'Checking direction:', name,
+          //   'from', row, col,
+          //   '→ M direction:', dxM, dyM,
+          //   '→ S direction:', dxS, dyS
+          // );
+
+           if (checkDirection(letters, row, col, targetRowM, targetColM, targetRowS, targetColS, LettersX)) {
             counter++;;
           }
-          
         }
       }
       
