@@ -82,23 +82,8 @@ export function solve(input){
         for (const [name, dirs] of entries) {
           const [dxM, dyM] = dirs.M;
           const [dxS, dyS] = dirs.S;
-          const targetRowM = row + dxM;
-          const targetColM = col + dyM;
-          const targetRowS = row + dxS;
-          const targetColS = col + dyS;
-
-          
-
-          // console.log(
-          //   'Checking direction:', name,
-          //   'from', row, col,
-          //   '→ M direction:', dxM, dyM,
-          //   '→ S direction:', dxS, dyS
-          // );
-
-           if (checkDirection(letters, row, col, targetRowM, targetColM, targetRowS, targetColS, LettersX)) {
-            counter++;;
-          }
+          console.log(name, dxM, dyM, dxS, dyS);
+       
         }
       }
       
