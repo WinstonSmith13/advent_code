@@ -4,7 +4,6 @@ export function solve(input) {
 
   let counter = 0;
 
-  // Fonction utilitaire pour éviter de sortir du tableau
   function getLetter(r, c) {
     if (
       r >= 0 && r < letters.length &&
