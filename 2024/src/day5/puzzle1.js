@@ -5,117 +5,43 @@ export function solve(input){
     .map(part => part.split(/\r?\n/));
 
   const first_section = first.map(line => line.trim().split(/\|/)).filter(pair => pair.length === 2);
-
-
-
   const second_section = second.map(line => line.trim().split(/,/));
 
   //console.log("first_section :", first_section);
   //console.log("second_section :", second_section);
 
-
-  
-
-  const positions = {};   
-  const graph = {};
-  const inDegree = {};
-  const queue = [];
-
- 
-  for (let i = 0; i < first_section.length; i++) {
-    const [from, to] = first_section[i];
-    const fromNumber = parseInt(from.trim());
-    const toNumber = parseInt(to.trim());
-   
-    if (!graph[fromNumber]) {
-      graph[fromNumber] = [];
-    }
-    if (!graph[toNumber]) {
-      graph[toNumber] = [];
-    } 
-
-    if (!graph[fromNumber].includes(toNumber)) {
-      graph[fromNumber].push(toNumber);
-    }
-
-  }
-
-  console.log("graph :", graph);
-
-  for (const node in graph) {
-    inDegree[node] = 0;
-    console.log("node :", node);
-  }
-
-  console.log("inDegree :", inDegree);
-
-
-
-  //  for (let i = 0; i < first_section.length; i++) {
-  //   for (let j = 0; j < first_section[i].length; j++) {
-      
-  //     const number = first_section[i][j];
-  //     if (!positions[number]) {
-  //      positions[number] = { left: 0, right: 0 };
-  //     }
-  //     if (j === 0) positions[number].left++;
-  //     if (j === 1) positions[number].right++;
-  //   }
-  
-  // }
-
-
-  const entries = Object.entries(positions);
-
-
-  entries.sort((a, b) => {
-  return a[1].right - b[1].right;
-  });
-  //console.log("entries :", entries);
-  const orderedNumbers = entries.map(entry => entry[0]);
-  //console.log("orderedNumbers :", orderedNumbers);
-
-
-  const lastIndex = -1;
   const goodOrderArray = [];
   
+  function isValidOrder(arrayToTest) {
+    for (const line of arrayToTest) {
+      const lineNumbers = line.map(n => parseInt(n));
+      
+      let isValid = true;
 
-  //console.log('second_section:', second_section);
+      for (const [from, to] of first_section) {
+        const fromNum = parseInt(from);
+        const toNum = parseInt(to);
 
-  function isValidOrder(arrayToTest, referenceOrder) {
+        if (lineNumbers.includes(fromNum) && lineNumbers.includes(toNum)) {
+          const fromIndex = lineNumbers.indexOf(fromNum);
+          const toIndex = lineNumbers.indexOf(toNum);
 
-  for (let i = 0; i < arrayToTest.length; i++) {
-    const line = arrayToTest[i];
-    const indexArray = [];
-
-    for (let j = 0; j < line.length; j++) {
-      const num = line[j];
-      const indexReference = referenceOrder.indexOf(num);
-      const indexInLine = j;
-
-      //console.log(`Numéro: "${num}"`);
-      //console.log(`Position dans arrayToTest: ${indexInLine}`);
-      //console.log(`Position dans referenceOrder: ${indexReference}`);
-
-      indexArray.push({
-        num: num,
-        indexReference: indexReference,
-      })
-
-      //console.log('indexArray:', indexArray);
-    }
-
-    if (indexArray.every((val, i, arr) => i === 0 || arr[i - 1].indexReference <= val.indexReference)){
-        goodOrderArray.push(line);
+          if (fromIndex > toIndex) {
+            isValid = false;
+            break;
+          }
+        }
       }
 
+      if (isValid) {
+        goodOrderArray.push(lineNumbers); 
+      }
+    }
   }
 
-}
+  isValidOrder(second_section);
 
-  isValidOrder(second_section, orderedNumbers);
-
-  //console.log("Ligne avec good order ", goodOrderArray);
+  // console.log("Ligne avec good order ", goodOrderArray);
 
   const centerNumbers = [];
 
@@ -126,7 +52,6 @@ export function solve(input){
       return parseInt(array[Math.floor(length / 2)]);
     } 
     if (length % 2 === 0) {
-      
       const left = parseInt(array[length / 2 - 1]);
       const right = parseInt(array[length / 2]);
       return Math.floor((left + right) / 2);
@@ -134,13 +59,15 @@ export function solve(input){
   }
 
   for (let i = 0; i < goodOrderArray.length; i++) {
-    centerNumbers.push(getCenterNumber(goodOrderArray[i]));
-    
-  }
+    const center = getCenterNumber(goodOrderArray[i]);
+    if (!isNaN(center)) {
+      centerNumbers.push(center);
+    } else {
+      console.warn("❌ Centre non numérique pour :", goodOrderArray[i]);
+    }
+  } 
 
-  //console.log("centerNumbers :", centerNumbers);
   let counter = centerNumbers.reduce((acc, num) => acc + num, 0);
 
-  
   return counter;
 }
