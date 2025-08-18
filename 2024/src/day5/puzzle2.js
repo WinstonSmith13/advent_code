@@ -1,92 +1,63 @@
-export function solve(input){
+export function solve(input) {
   const [first, second] = input
     .trim()
     .split(/\r?\n\r?\n/)
     .map(part => part.split(/\r?\n/));
 
-  const first_section = first.map(line => line.trim().split(/\|/)).filter(pair => pair.length === 2);
-  const second_section = second.map(line => line.trim().split(/,/));
+  console.log("--- Input brut ---");
+  console.log("first (règles) :", first);
+  console.log("second (séquences) :", second);
 
-  //console.log("first_section :", first_section);
-  //console.log("second_section :", second_section);
+   const first_section = first.map(line => line.trim().split(/\|/)).filter(pair => pair.length === 2);  
+   const second_section = second.map(line => line.trim().split(/,/));
 
-  const goodOrderArray = [];
-  const badOrderArray = [];
-  
-  function isValidOrder(arrayToTest) {
-    for (const line of arrayToTest) {
-      const lineNumbers = line.map(n => parseInt(n));
-      
-      let isValid = true;
-      console.log('lineNumbers', lineNumbers);
-
-      for (const [from, to] of first_section) {
-        const fromNum = parseInt(from);
-        const toNum = parseInt(to);
-    
-
-        if (lineNumbers.includes(fromNum) && lineNumbers.includes(toNum)) {
-          const fromIndex = lineNumbers.indexOf(fromNum);
-          const toIndex = lineNumbers.indexOf(toNum);
-
-          
-
-          if (fromIndex > toIndex) {
-            isValid = false;
-            console.log('bad number order', fromNum, toNum);
-            break;
-          }  
-          
-        }
-      }
-
-      if (isValid) {
-        goodOrderArray.push(lineNumbers); 
-      } else badOrderArray.push(lineNumbers);
-
-      
-    }
-  }
-  function fixOrder (arrayTofix){
-    console.log(arrayTofix);
-  }
-  function findBadOrder (arrayTofix){
-    console.log(arrayTofix);
-  }
-
-  isValidOrder(second_section);
-  fixOrder(badOrderArray);
-  findBadOrder(badOrderArray);
-
-
-
-  // Trouver l'index dans le mauvais ordre 
-
-  const centerNumbers = [];
-
-  function getCenterNumber(array) {
-    const length = array.length;
-    if (length === 0) return null;
-    if (length % 2 === 1) {
-      return parseInt(array[Math.floor(length / 2)]);
-    } 
-    if (length % 2 === 0) {
-      const left = parseInt(array[length / 2 - 1]);
-      const right = parseInt(array[length / 2]);
-      return Math.floor((left + right) / 2);
+  class DependencyRules {
+    constructor(from, to) {
+      this.from = parseInt(from);
+      this.to = parseInt(to);
     }
   }
 
-  for (let i = 0; i < goodOrderArray.length; i++) {
-    const center = getCenterNumber(goodOrderArray[i]);
-    if (!isNaN(center)) {
-      centerNumbers.push(center);
-    } else {
-      console.warn("❌ Centre non numérique pour :", goodOrderArray[i]);
+  class Sequence {
+    constructor(numbers) {
+      this.numbers = numbers.map(n => parseInt(n));
+      this.isValid = true;
+      this.errors = [];
     }
-  } 
+  }
 
-  let counter = centerNumbers.reduce((acc, num) => acc + num, 0);
+  function parseDependencyRules(lines) {
+    return lines
+      .map(line => line.trim().split(/\|/))
+      .filter(pair => pair.length === 2)
+      .map(([from, to]) => new DependencyRules(from, to));
+  }
 
-  return counter;
+  function parseSequences(lines) {
+    return lines
+      .map(line => line.trim().split(/,/))
+      .map(numbers => new Sequence(numbers));
+  }
+
+
+  const dependencyRules = parseDependencyRules(first);
+  console.log("dependencyRules: ", dependencyRules);
+
+  const sequences = parseSequences(second);
+  console.log('sequences: ', sequences);
+
+  function validateOrder (sequences){
+
+  for (const seq of sequences){
+    console.log("valeur :", seq);
+  }
+
+
+
+}
+
+
+  validateOrder(sequences);
+
+  return 'counter';
 }
