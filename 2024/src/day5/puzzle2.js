@@ -4,10 +4,6 @@ export function solve(input) {
     .split(/\r?\n\r?\n/)
     .map(part => part.split(/\r?\n/));
 
-  console.log("--- Input brut ---");
-  console.log("first (règles) :", first);
-  console.log("second (séquences) :", second);
-
   class DependencyRules {
     constructor(from, to) {
       this.from = parseInt(from);
@@ -19,7 +15,7 @@ export function solve(input) {
     constructor(numbers) {
       this.numbers = numbers.map(n => parseInt(n));
       this.isValid = true;
-      this.errors = []; // Tableau pour stocker les erreurs
+      this.errors = []; 
     }
   }
 
@@ -39,12 +35,8 @@ export function solve(input) {
   const dependencyRules = parseDependencyRules(first);
   const sequences = parseSequences(second);
 
-  console.log('dependencyRules : ', dependencyRules);
-  console.log('Sequences: ', sequences);
-
   function validateOrder(sequences) {
     for (const seq of sequences) {
-      console.log("Validation de la séquence :", seq.numbers);
       for (const rule of dependencyRules) {
         const fromNum = rule.from;
         const toNum = rule.to;
@@ -53,8 +45,10 @@ export function solve(input) {
           const toIndex = seq.numbers.indexOf(toNum);
           if (fromIndex > toIndex) {
             seq.isValid = false;
-            seq.errors.push(`Invalid order: ${fromNum} should come before ${toNum}`);
-            console.log(`Inversion détectée : ${fromNum} est après ${toNum}`);
+            seq.errors.push(`Invalid order:  should be   ${fromNum}, ${toNum}`);
+            moveElement(seq.numbers, fromIndex, toIndex);
+            validateOrder(sequences);
+            
           }
         }
       }
@@ -63,14 +57,24 @@ export function solve(input) {
 
   validateOrder(sequences);
 
-  // Affichage des résultats après validation
-  console.log("\n--- Résultats après validation ---");
-  for (const seq of sequences) {
-    console.log(`Séquence ${seq.numbers} : ${seq.isValid ? "✅ Valide" : "Invalide"}`);
-    if (!seq.isValid) {
-      console.log("  Erreurs :", seq.errors);
-    }
+ 
+
+  function moveElement(array, fromIndex, toIndex) {
+    const element = array[fromIndex];
+    array.splice(fromIndex, 1); 
+    array.splice(toIndex +1, 0, element); 
+    return array;
   }
 
+
+   console.log("\n--- Résultats après validation ---");
+  for (const seq of sequences) {
+   
+    if (!seq.isValid) {
+      console.log(`Séquence ${seq.numbers}`);
+      console.log("  Erreurs :", seq.errors);
+      swapNumbers(seq.numbers, 0, seq.numbers.length - 1);
+    }
+  }
   return 'counter';
 }
