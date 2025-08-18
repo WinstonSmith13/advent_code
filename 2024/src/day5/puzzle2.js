@@ -8,9 +8,6 @@ export function solve(input) {
   console.log("first (règles) :", first);
   console.log("second (séquences) :", second);
 
-   const first_section = first.map(line => line.trim().split(/\|/)).filter(pair => pair.length === 2);  
-   const second_section = second.map(line => line.trim().split(/,/));
-
   class DependencyRules {
     constructor(from, to) {
       this.from = parseInt(from);
@@ -22,7 +19,7 @@ export function solve(input) {
     constructor(numbers) {
       this.numbers = numbers.map(n => parseInt(n));
       this.isValid = true;
-      this.errors = [];
+      this.errors = []; // Tableau pour stocker les erreurs
     }
   }
 
@@ -39,25 +36,41 @@ export function solve(input) {
       .map(numbers => new Sequence(numbers));
   }
 
-
   const dependencyRules = parseDependencyRules(first);
-  console.log("dependencyRules: ", dependencyRules);
-
   const sequences = parseSequences(second);
-  console.log('sequences: ', sequences);
 
-  function validateOrder (sequences){
+  console.log('dependencyRules : ', dependencyRules);
+  console.log('Sequences: ', sequences);
 
-  for (const seq of sequences){
-    console.log("valeur :", seq);
+  function validateOrder(sequences) {
+    for (const seq of sequences) {
+      console.log("Validation de la séquence :", seq.numbers);
+      for (const rule of dependencyRules) {
+        const fromNum = rule.from;
+        const toNum = rule.to;
+        if (seq.numbers.includes(fromNum) && seq.numbers.includes(toNum)) {
+          const fromIndex = seq.numbers.indexOf(fromNum);
+          const toIndex = seq.numbers.indexOf(toNum);
+          if (fromIndex > toIndex) {
+            seq.isValid = false;
+            seq.errors.push(`Invalid order: ${fromNum} should come before ${toNum}`);
+            console.log(`Inversion détectée : ${fromNum} est après ${toNum}`);
+          }
+        }
+      }
+    }
   }
 
-
-
-}
-
-
   validateOrder(sequences);
+
+  // Affichage des résultats après validation
+  console.log("\n--- Résultats après validation ---");
+  for (const seq of sequences) {
+    console.log(`Séquence ${seq.numbers} : ${seq.isValid ? "✅ Valide" : "Invalide"}`);
+    if (!seq.isValid) {
+      console.log("  Erreurs :", seq.errors);
+    }
+  }
 
   return 'counter';
 }
