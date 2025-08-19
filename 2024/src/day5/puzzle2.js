@@ -37,7 +37,12 @@ export function solve(input) {
 
   function validateOrder(sequences) {
     for (const seq of sequences) {
-      for (const rule of dependencyRules) {
+      let hasInversion;
+      do {
+        hasInversion = false;
+        seq.isValid = true; // Réinitialise la validité
+        seq.errors = []; // Vide les erreurs
+        for (const rule of dependencyRules) {
         const fromNum = rule.from;
         const toNum = rule.to;
         if (seq.numbers.includes(fromNum) && seq.numbers.includes(toNum)) {
@@ -46,12 +51,17 @@ export function solve(input) {
           if (fromIndex > toIndex) {
             seq.isValid = false;
             seq.errors.push(`Invalid order:  should be   ${fromNum}, ${toNum}`);
-            moveElement(seq.numbers, fromIndex, toIndex);
-            validateOrder(sequences);
+            // moveElement(seq.numbers, fromIndex, toIndex);
+            // validateOrder(sequences);
             
           }
         }
       }
+      } while (hasInversion);    
+      if(!hasInversion){
+        seq.isValid = true;
+        seq.errors = [];
+      }  
     }
   }
 
@@ -61,19 +71,17 @@ export function solve(input) {
 
   function moveElement(array, fromIndex, toIndex) {
     const element = array[fromIndex];
-    array.splice(fromIndex, 1); 
-    array.splice(toIndex +1, 0, element); 
+    array.splice(fromIndex, 1);
+    array.splice(toIndex, 0, element);
     return array;
   }
 
 
    console.log("\n--- Résultats après validation ---");
   for (const seq of sequences) {
-   
+    console.log(`Séquence ${seq.numbers} : ${seq.isValid ? "✅ Valide" : "❌ Invalide"}`);
     if (!seq.isValid) {
-      console.log(`Séquence ${seq.numbers}`);
       console.log("  Erreurs :", seq.errors);
-      swapNumbers(seq.numbers, 0, seq.numbers.length - 1);
     }
   }
   return 'counter';
