@@ -15,7 +15,7 @@ export function solve(input) {
     constructor(numbers) {
       this.numbers = numbers.map(n => parseInt(n));
       this.isValid = true;
-      this.errors = []; 
+      this.errors = [];
     }
   }
 
@@ -34,55 +34,105 @@ export function solve(input) {
 
   const dependencyRules = parseDependencyRules(first);
   const sequences = parseSequences(second);
+  const badOrderArray = [];
+  const fixOrderArray = [];
 
   function validateOrder(sequences) {
     for (const seq of sequences) {
-      let hasInversion;
-      do {
-        hasInversion = false;
-        seq.isValid = true; // Réinitialise la validité
-        seq.errors = []; // Vide les erreurs
-        for (const rule of dependencyRules) {
+      seq.isValid = true; // Réinitialise la validité pour chaque séquence
+      seq.errors = [];    // Vide les erreurs pour chaque séquence
+
+      for (const rule of dependencyRules) {
         const fromNum = rule.from;
         const toNum = rule.to;
+
         if (seq.numbers.includes(fromNum) && seq.numbers.includes(toNum)) {
           const fromIndex = seq.numbers.indexOf(fromNum);
           const toIndex = seq.numbers.indexOf(toNum);
+
           if (fromIndex > toIndex) {
             seq.isValid = false;
-            seq.errors.push(`Invalid order:  should be   ${fromNum}, ${toNum}`);
-            // moveElement(seq.numbers, fromIndex, toIndex);
-            // validateOrder(sequences);
-            
+            seq.errors.push(`Invalid order: ${fromNum} should come before ${toNum}`);
           }
         }
       }
-      } while (hasInversion);    
-      if(!hasInversion){
-        seq.isValid = true;
-        seq.errors = [];
-      }  
+
+      
+      if (!seq.isValid) {
+        badOrderArray.push(seq);
+      }
     }
+  }
+
+   function moveElement(array, fromIndex, toIndex) {    
+      const element = array[fromIndex];    
+      array.splice(fromIndex, 1);    
+      array.splice(toIndex, 0, element);   
+      return array;  
   }
 
   validateOrder(sequences);
 
- 
+  function fixOrder(badOrderArrayTemplate) {    
+    for (const seq of badOrderArrayTemplate) {      
+      let hasInversion;     
+      
+      do {        
+        hasInversion = false;        
+        seq.isValid = true; // Réinitialise la validité        
+        seq.errors = []; // Vide les erreurs        
+        for (const rule of dependencyRules) {                 
+        
+        const fromNum = rule.from;        
+        const toNum = rule.to;               
+        if (seq.numbers.includes(fromNum) && seq.numbers.includes(toNum)) {         
+            const fromIndex = seq.numbers.indexOf(fromNum);          
+            const toIndex = seq.numbers.indexOf(toNum);                    
+            
+            if (fromIndex > toIndex) {           
+              seq.isValid = false;            
+              seq.errors.push(`Invalid order:  should be   ${fromNum}, ${toNum}`); 
+              moveElement(seq.numbers, fromIndex, toIndex);
+              hasInversion = true;            
+              // validateOrder(sequences);                      
+              // 
+              }        
+            }      
+          }      
+        } while (hasInversion);         
+         if(seq.isValid === true){          
+          fixOrderArray.push(seq);
+        }   
+      }  
+    }
+  
+  fixOrder(badOrderArray);
+  
+  const centerNumbers = [];
 
-  function moveElement(array, fromIndex, toIndex) {
-    const element = array[fromIndex];
-    array.splice(fromIndex, 1);
-    array.splice(toIndex, 0, element);
-    return array;
-  }
-
-
-   console.log("\n--- Résultats après validation ---");
-  for (const seq of sequences) {
-    console.log(`Séquence ${seq.numbers} : ${seq.isValid ? "✅ Valide" : "❌ Invalide"}`);
-    if (!seq.isValid) {
-      console.log("  Erreurs :", seq.errors);
+  function getCenterNumber(array) {
+    const length = array.length;
+    if (length === 0) return null;
+    if (length % 2 === 1) {
+      return parseInt(array[Math.floor(length / 2)]);
+    } 
+    if (length % 2 === 0) {
+      const left = parseInt(array[length / 2 - 1]);
+      const right = parseInt(array[length / 2]);
+      return Math.floor((left + right) / 2);
     }
   }
-  return 'counter';
+
+  for (const seq of fixOrderArray) {
+    const center = getCenterNumber(seq.numbers);
+    if (!isNaN(center)) {
+      centerNumbers.push(center);
+    } else {
+      console.warn("❌ Centre non numérique pour :", seq.numbers);
+    }
+  } 
+
+  let counter = centerNumbers.reduce((acc, num) => acc + num, 0);
+
+  return counter;
 }
