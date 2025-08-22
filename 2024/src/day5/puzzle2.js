@@ -123,12 +123,12 @@ export function solve(input) {
     }
   }
 
-  for (const seq of fixOrderArray) {
-    const center = getCenterNumber(seq.numbers);
+  for (let i = 0; i < fixOrderArray.length; i++) {
+    const center = getCenterNumber(fixOrderArray[i].numbers);
     if (!isNaN(center)) {
       centerNumbers.push(center);
     } else {
-      console.warn("❌ Centre non numérique pour :", seq.numbers);
+      console.warn("❌ Centre non numérique pour :", fixOrderArray[i].numbers);
     }
   } 
 
