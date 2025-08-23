@@ -34,14 +34,26 @@ export function solve(input){
               const adjacentCell = mapping[newRow][newCol];
               
               console.log(`Adjacent cell to the ${direction}:`, adjacentCell);
+              console.log(typeof adjacentCell);
+              if(adjacentCell === '#'){
+                console.log('block found at', 'row', newRow, 'col', newCol);
+              } else {
+                // cell actuelle devient X et la cellule en haut devient ^
+                //mapping[row][col] = 'X';
+                //mapping[newRow][newCol] = '^';
+                console.log('no block found at', 'row', newRow, 'col', newCol);
+              }
+              // si pas de # alors on comme
             }
           }
-        } else if ( robot[1] === position ){ {
+        } else if ( robot[1] === position ){ 
           console.log('robot found at', 'row', row, 'col', col);
         }
      
     }          
   }
+
+  console.log(mapping);
 
   // # block 
   // il passe sur un symbole qui se transforme en x 
