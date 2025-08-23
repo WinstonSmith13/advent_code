@@ -27,6 +27,17 @@ export function solve(input){
         if ( robot[0] === position ){
           console.log('robot found at', 'row', row, 'col', col);
           // une fois trouver il faut verifier ce qu'il ya autour 
+          for (let [direction, [dRow, dCol]] of entries){
+            const newRow = row + dRow;
+            const newCol = col + dCol;
+            if (newRow >= 0 && newRow < mapping.length && newCol >= 0 && newCol < mapping[newRow].length){
+              const adjacentCell = mapping[newRow][newCol];
+              
+              console.log(`Adjacent cell to the ${direction}:`, adjacentCell);
+            }
+          }
+        } else if ( robot[1] === position ){ {
+          console.log('robot found at', 'row', row, 'col', col);
         }
      
     }          
