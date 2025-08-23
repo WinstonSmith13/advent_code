@@ -16,7 +16,7 @@ export function solve(input){
     'bas-droite': [1, 1]
   }
 
-  const robot = '^';
+  const robot = ['^', 'v', '<', '>'];
   const entries = Object.entries(directions);
 
   for (let row = 0; row < mapping.length; row++) {
@@ -24,8 +24,9 @@ export function solve(input){
       
         const position = mapping[row][col];
 
-        if ( robot === position ){
+        if ( robot[0] === position ){
           console.log('robot found at', 'row', row, 'col', col);
+          // une fois trouver il faut verifier ce qu'il ya autour 
         }
      
     }          
