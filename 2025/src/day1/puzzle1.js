@@ -1,5 +1,5 @@
 export function solve(input) {
-  console.log('--- MODULO EXERCICE ---');
+  console.log('--- MODULO PART 1---');
   const lines = input.trim().split('\n');
 
   let dial = 50;
@@ -23,28 +23,26 @@ export function solve(input) {
     const distance = Number(direction.numbers);
     let dialresult;
 
-    console.log(`\n--- Tour ${i + 1} / ${directions.length} ---`);
-    console.log({ dialBefore: dial, instruction: direction });
-    // ------------------------------------------
-
     if (letter === 'L') {
       dialresult = dial - distance;
-      dial = (dialresult % 100 + 100) % 100;
-      console.log({ action: 'Left', distance: distance, newDial: dial });
+
+      const moduloStep1 = dialresult % 100;
+      const moduloStep2 = moduloStep1 + 100;
+      const finalModuloResult = moduloStep2 % 100;
+
+
+      dial = finalModuloResult;
 
     } else if (letter === 'R') {
       dialresult = dial + distance;
 
-      dial = dialresult % 100;
-      console.log({ action: 'Right', distance: distance, newDial: dial });
+      const finalModuloResult = dialresult % 100;
 
-    } else {
-      console.log({ status: 'Instruction ignorée', letter: letter });
+      dial = finalModuloResult;
+
     }
-
     if (dial === 0) {
       dialpoint += 1;
-      console.log({ pointIncremented: true, totalPoints: dialpoint });
     }
   }
 
