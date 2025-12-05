@@ -1,5 +1,5 @@
 export function solve(input) {
-  console.log('--- XYXY PART 2---');
+  console.log('--- XYXY Patern check - for loop  PART 2---');
   // 1 - reflexion 
   // 2 - decouper en etape. 
 
