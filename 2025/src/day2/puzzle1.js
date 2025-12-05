@@ -1,6 +1,8 @@
 export function solve(input) {
-  console.log('--- MODULO PART 1---');
+  console.log('--- XYXY PART 1---');
   const lines = input.trim();
+
+  let invalidListId = [];
   // separer par virgule 
   // trié par (-)
 
@@ -13,8 +15,8 @@ export function solve(input) {
       const parts = id.trim().split('-');
 
       return {
-        start: parts[0],
-        end: parts[1],
+        start: parseInt(parts[0], 10), 
+        end: parseInt(parts[1], 10),
       };
     })
   }
@@ -30,22 +32,18 @@ export function solve(input) {
 
     // rule 2 - repeated sequence
     // checker les pattern - ex 55 => 5 5 donc cest pas bon mais aussi 1212 => 12 12,
-    // 
+    const len = id.length;
+    if (len % 2 === 0) {
+      if(id.slice(0, len / 2) === id.slice(len / 2))
+      return false;
+    } 
 
     return { status: true, id };
   }
 
 
-
-
-
-
-
-
   const idGroups = parseIdgroups(lines);
-
-  console.log('idGroups', idGroups);
-
+  // console.log('idGroups', idGroups);
 
   // on doit parcourir chaque idGroup pour checker id a lintérieur.
   // le foreach permet de parcourir chaque element du tableau. et d'acceder a l'objet group.
@@ -53,10 +51,24 @@ export function solve(input) {
  
   idGroups.forEach((group, index) =>  {
     const { start, end } = group;
-    console.log(`--- IdGroup ${index + 1} ---`);
-    console.log('start:', start);
-    console.log('end:', end);
+    //console.log(`--- IdGroup ${index + 1} ---`);
+    //console.log('start:', start);
+    //console.log('end:', end);
+
+    for (let currentId = start; currentId <= end; currentId++) {
+      //console.log('currentId:', currentId);
+      const id2Check = currentId.toString();
+      //console.log('checking id:', isValidId(id2Check) );
+      if (!isValidId(id2Check).status) {
+        invalidListId.push(parseInt(id2Check));
+      }
+    }
+    
+    
   });
   
-  return 'lines';
+  //console.log(`Invalid IDs in Group`, invalidListId);
+  const finalCount = invalidListId.reduce((a, b) => a + b, 0);
+
+  return finalCount;
 }
