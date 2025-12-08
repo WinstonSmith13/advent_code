@@ -22,12 +22,9 @@ export function solve(input) {
  function getMaxDigits(arr, ignoreIndex = -1) { 
   return arr.reduce(
     (acc, curr, index) => {
-
       if (index === ignoreIndex) { 
         return acc; 
       }
-      
-  
       if (curr > acc.value) {
         return { value: curr, index };
       }
@@ -57,5 +54,5 @@ export function solve(input) {
  // const totalVoltage = finalVoltages.reduce((acc, curr) => acc + curr, 0);
 
 
-  return totalVoltage;
+  return 'totalVoltage';
 }

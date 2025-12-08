@@ -31,5 +31,4 @@ async function main(inputPath) {
   return sum;
 }
 
-// Nous exportons la fonction main pour pouvoir l'importer dans index.js
 export default main;
