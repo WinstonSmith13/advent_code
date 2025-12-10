@@ -42,13 +42,11 @@ export function solve(input) {
     //console.log(`Bank ${i + 1}:`);
     const bankDigits = digits[i];
 
-    //const voltage = parseInt(`${orderArray[0].value}${orderArray[1].value}`, 10);
-    //finalVoltages.push(voltage);
-    //console.log(`  Voltage formed:`, voltage);
+    console.table(bankDigits);
 
-   // for (let j=0; j< digits[i].length; j++) {
-   //   console.log(`  Digit ${j + 1}:`, digits[i][j]);
-   // }
+    for (let j=0; j< digits[i].length; j++) {
+        console.log(`  Digit ${j + 1}:`, digits[i][j]);
+      }
   };
 
  // const totalVoltage = finalVoltages.reduce((acc, curr) => acc + curr, 0);
