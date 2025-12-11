@@ -1,56 +1,49 @@
 export function solve(input) {
-  console.log('--- PART 1---');
-  const banksList = input.trim().split('\n');
+    console.log('--- PART 1---');
+    const banksList = input.trim().split('\n');
 
-  // Rule 1 - Parser tous les digits dans une baterie -
-  // Essayer de trouver le plus grand nombre qu'on peut former avec deux digits.
-  // ex : 81117 => on parcourt 8, 1, 1, 1, 7 => on trouve 8 et 7 => 87
-  // trouver d'abord le plus grand digit, puis le deuxieme plus grand digit.
-  // on parcourt une fois les tableau - le premier le grand on le met dans un tableau
-  // on recommence on enlevant le premier trouvé.
-  // on recommence pour trover le deuxieme plus grand.
-  // on concatene les deux et on parseInt pour avoir le nombre final.
-  // on le push dans un tableau final.
-
-  let finalVoltages = [];
-
+    let finalVoltages = [];
+    
+    function parseBatteries(lines) {
   
-  function parseBatteries(lines) {
-    return lines.map(line  => [...line].map(d => parseInt(d, 10)));
-  }
+        return lines.map(line => [...line].map(d => parseInt(d, 10)));
+    }
 
- function getMaxDigits(arr, ignoreIndex = -1) { 
-  return arr.reduce(
-    (acc, curr, index) => {
-      if (index === ignoreIndex) { 
-        return acc; 
-      }
-      if (curr > acc.value) {
-        return { value: curr, index };
-      }
-      return acc;
-    },
-    { value: -Infinity, index: -1 } 
-  );
-}
+    const digits = parseBatteries(banksList);
 
-  const digits = parseBatteries(banksList);
+    for (let i = 0; i < digits.length; i++) {
+        console.log(`\nBank ${i + 1}:`);
+        const bankDigits = digits[i]; 
 
-  for (let i=0; i< digits.length; i++) {
-    const tempArray = [];
+        let maxVoltageForBank = 0;
+        
+        for (let j = 0; j < bankDigits.length - 1; j++) {
+          console.log(`  - Choix de X à l'index ${j} : ${bankDigits[j]}`);
+            const X = bankDigits[j]; 
+            
+            for (let k = j + 1; k < bankDigits.length; k++) {
+              console.log(`    - Choix de Y à l'index ${k} : ${bankDigits[k]}`);
+                const Y = bankDigits[k]; 
+ 
+                const voltageString = `${X}${Y}`;
+                const currentVoltage = parseInt(voltageString, 10);
+                
+                if (currentVoltage > maxVoltageForBank) {
+                  console.log(`      - Max: ${maxVoltageForBank}`);
+                  console.log(`      - Nouveau Voltage Max Trouvé: ${currentVoltage} (avec X=${X} et Y=${Y})`);
 
-    //console.log(`Bank ${i + 1}:`);
-    const bankDigits = digits[i];
+                    maxVoltageForBank = currentVoltage;
+                }
+            }
+        }
+        
+        finalVoltages.push(maxVoltageForBank);
 
-    console.table(bankDigits);
+        console.log(`  Chiffres de la Banque: [${bankDigits.join(', ')}]`);
+        console.log(`  Voltage Max Trouvé  : ${maxVoltageForBank}`);
+    }
 
-    for (let j=0; j< digits[i].length; j++) {
-        console.log(`  Digit ${j + 1}:`, digits[i][j]);
-      }
-  };
+    const totalVoltage = finalVoltages.reduce((acc, curr) => acc + curr, 0);
 
- // const totalVoltage = finalVoltages.reduce((acc, curr) => acc + curr, 0);
-
-
-  return 'totalVoltage';
+    return totalVoltage;
 }
