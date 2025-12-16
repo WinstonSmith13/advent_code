@@ -5,39 +5,58 @@ export function solve(input) {
     let finalVoltages = [];
     
     function parseBatteries(lines) {
-  
-        return lines.map(line => [...line].map(d => parseInt(d, 10)));
-    }
+      return lines.map(line => [...line].map(d => parseInt(d, 10)));
+    } 
 
-    function maxVoltageForBank(bankDigits, D) {
-  
-      let maxVoltageForBank = 0;
+    function dynamicMaxVoltage(bankDigits, digitals) {
+      console.log('bankDigits:', bankDigits);
 
-      function makeCombinations(startingIndex, currentVoltage) {
-        if (currentVoltage.length === D) {
-                const voltageString = currentVoltage.join('');
+      for (let i = 0; i < digits.length; i++) {
+        //console.log(`\nBank ${i + 1}:`);
+        const bankDigits = digits[i]; 
+      
+        console.log(`bankDigits: ${i + 1}, value: ${bankDigits}`);
+      
+        let maxVoltageForBank = 0;
+        
+        for (let j = 0; j < bankDigits.length - 1; j++) {
+            console.log(`  - Choix de X à l'index ${j} : ${bankDigits[j]}`);
+            
+            const X = bankDigits[j]; 
+            
+            for (let k = j + 1; k < bankDigits.length; k++) {
+              console.log(`    - Choix de Y à l'index ${k} : ${bankDigits[k]}`);
+                const Y = bankDigits[k]; 
               
+                for (let f = k + 1; f < bankDigits.length; f++) {
+                  console.log(`    - Choix de A à l'index ${f} : ${bankDigits[f]}`);
+                    const A = bankDigits[k]; 
+
+                       const voltageString = `${X}${Y}${A}`;
+                       console.log('voltageString:', voltageString);
                 const currentVoltage = parseInt(voltageString, 10);
                 
                 if (currentVoltage > maxVoltageForBank) {
-                  console.log(`      - Max: ${maxVoltageForBank}`);
+              //    console.log(`      - Max: ${maxVoltageForBank}`);
+                //  console.log(`      - Nouveau Voltage Max Trouvé: ${currentVoltage} (avec X=${X} et Y=${Y})`);
+
                     maxVoltageForBank = currentVoltage;
                 }
-                return;
+ 
+                
+                }
+                
         }
-        for (let i = startingIndex; i < bankDigits.length; i++) {
-          currentVoltage.push(bankDigits[i]);
-          makeCombinations(i + 1, currentVoltage);
-          currentVoltage.pop();
-        }
+         
       }
-      makeCombinations(0, []);
-      return maxVoltageForBank;
-
-
     }
 
-    const digits = parseBatteries(banksList);
 
-    return '# TODO: Implement puzzle 2 solution ';
+ 
+            }
+    const digits = parseBatteries(banksList);
+    dynamicMaxVoltage(digits);
+
+
+    return 'totalVoltage';
 }
